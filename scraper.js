@@ -43,65 +43,45 @@ writeStream.write(`Title,Price,ImageURL,Url,Time \n`);
 
 
 
-shirts = {
-    'Shirt1': 1,
-    'Shirt2': 2,
-    'Shirt3': 3,
-    'Shirt4': 4,
-    'Shirt5': 5,
-    'Shirt6': 6,
-    'Shirt7': 7,
-    'Shirt8': 8
-};
+shirts = [];
+
+var preScrape = new Promise(function(resolve, reject){
+    var url = 'http://shirts4mike.com/shirts.php';
+    request(url, (error, response, html) => {
+     if(!error && response.statusCode == 200){
+       $ = cheerio.load(html);
+       const shirtQty = $('.products li a');
+       shirtQty.each(function(){
+         shirts.push($(this).attr('href'));
+       });
+       resolve();
+    }
+  });
+})
+
+function nick() {
+  console.log(shirts);
+}
 
 function scraper() {
-  for (shirt in shirts) {
-      var url = 'http://shirts4mike.com/shirt.php?id=10' + shirts[shirt];
-      request(url, ( function(shirt) {
-          return function(err, resp, body) {
-              if (err)
-                  throw err;
-              $ = cheerio.load(body);
-              const price = $('.shirt-details h1 span').text();
-              const title = $('.breadcrumb').text().substring(9).replace(/,/, ' -');
-              //     //const url = $('html');  Add variable to request statement and use variable techdegree
-              const imageURL = $('.shirt-picture img').attr('src');
-              const shirtURL = 'http://shirts4mike.com/shirt.php?id=10' + shirts[shirt];
-              const time = Date();
-
-              writeStream.write(`${title}, ${price}, ${imageURL}, ${shirtURL}, ${time} \n`);
-          }
-      } )(shirt));
+ for (i = 1; i <= 8; i += 1){
+    var url = `http://shirts4mike.com/shirt.php?id=10${i}`;
+    request(url, (error, response, html) => {
+     if(!error && response.statusCode == 200){
+       $ = cheerio.load(html);
+       const price = $('.shirt-details h1 span').text();
+       const title = $('.breadcrumb').text().substring(9).replace(/,/, ' -');
+       const imageURL = $('.shirt-picture img').attr('src');
+       const shirtURL = `http://shirts4mike.com/shirt.php?id=10${i}`;
+       const time = Date();
+       writeStream.write(`${title}, ${price}, ${imageURL}, ${shirtURL}, ${time} \n`);
+    }
+   });
   }
   console.log('Scraping complete...')
 }
 
-scraper();
+preScrape.then(nick);
 
 
-
-
-
-
-
-
-
-
-
-//
-// //Write Headers
-// writeStream.write(`Price,Title,URL \n`);
-
-// request('http://shirts4mike.com/shirt.php?id=102', (error, response, html) => {
-//   if(!error && response.statusCode == 200){
-//     const $ = cheerio.load(html);
-//     const price = $('.shirt-details h1 span').text();
-//     const title = $('.breadcrumb').text().substring(9).replace(/,/, ' -');
-//     //const url = $('html');  Add variable to request statement and use variable techdegree
-//     const imageURL = $('.shirt-picture img').attr('src');
-//
-//     //Write row to CSV
-//     writeStream.write(`${price}, ${title}, ${imageURL} \n`);
-//     console.log('Scraping done...');
-//   }
-// });
+//scraper();
