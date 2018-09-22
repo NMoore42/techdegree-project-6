@@ -14,13 +14,14 @@ const errorLog = fs.createWriteStream('./data/scraper-error.log');
 // //Write Headers
 writeStream.write(`Title,Price,ImageURL,Url,Time \n`);
 
+//Folder Path
+const dir = './data';
 
 //Container for individual shirt links
 shirts = [];
 
 //Checks to see if folder named Data is created
-function folderCheck() {
-  const dir = './data';
+function folderCheck(dir) {
   if (!fs.existsSync(dir)){
       fs.mkdirSync(dir);
   }
@@ -74,7 +75,7 @@ function errorWrite(error, time, errorCode){
 }
 
 function execute(){
-  folderCheck();
+  folderCheck(dir);
   preScrape.then(scraper);
 }
 
