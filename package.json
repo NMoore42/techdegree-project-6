@@ -1,17 +1,19 @@
 {
-  "name": "techdegree-project-6",
+  "name": "scraper",
   "version": "1.0.0",
-  "description": "",
+  "description": "webscraper ",
   "main": "scraper.js",
+  "scripts": {
+    "start": "node scraper.js"
+  },
+  "keywords": [
+    "scraper",
+    "cheerio"
+  ],
+  "author": "Nick Moore",
+  "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "request": "^2.88.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }
