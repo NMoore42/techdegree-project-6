@@ -16,7 +16,7 @@ writeStream.write(`Title,Price,ImageURL,Url,Time \n`);
 
 
 //Container for individual shirt links
-shirts = [3];
+shirts = [];
 
 //Checks to see if folder named Data is created
 function folderCheck() {
