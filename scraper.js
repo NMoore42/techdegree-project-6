@@ -27,7 +27,6 @@ function folderCheck(dir) {
   }
 }
 
-
 //Function to scrape main page and return individual shirt links
 var preScrape = new Promise(function(resolve, reject){
     var url = 'http://shirts4mike.com/shirts.php';
@@ -68,15 +67,18 @@ function scraper() {
   console.log('Scraping complete...')
 }
 
+//Log error message based on error type to console and log file
 function errorWrite(error, time, errorCode){
   errorMessage = `There has been a ${errorCode} error. Cannot connect to http://shirts4mike.com${error}.`;
   console.log(errorMessage);
   errorLog.write(`${time}, ${errorMessage} \n`);
 }
 
+//Execute program
 function execute(){
   folderCheck(dir);
   preScrape.then(scraper);
 }
 
+//Called function(s)
 execute();
