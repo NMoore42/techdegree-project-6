@@ -7,13 +7,6 @@ const request = require('request');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-//Saves data to file named for date of creation
-const writeStream = fs.createWriteStream('./data/' + Date().substring(4,15).replace(/ /gi, '-') + '.csv');
-const errorLog = fs.createWriteStream('./data/scraper-error.log');
-
-// //Write Headers
-writeStream.write(`Title,Price,ImageURL,Url,Time \n`);
-
 //Folder Path
 const dir = './data';
 
@@ -46,6 +39,8 @@ var preScrape = new Promise(function(resolve, reject){
 
 //Function to scrape info from each individual page
 function scraper() {
+const writeStream = fs.createWriteStream('./data/' + Date().substring(4,15).replace(/ /gi, '-') + '.csv');
+writeStream.write(`Title,Price,ImageURL,Url,Time \n`);
  for (shirt in shirts){
     var url = 'http://shirts4mike.com/' + shirts[shirt];
     request(url, (function(shirt){
@@ -69,6 +64,7 @@ function scraper() {
 
 //Log error message based on error type to console and log file
 function errorWrite(error, time, errorCode){
+  const errorLog = fs.createWriteStream('./data/scraper-error.log');
   errorMessage = `There has been a ${errorCode} error. Cannot connect to http://shirts4mike.com${error}.`;
   console.log(errorMessage);
   errorLog.write(`${time}, ${errorMessage} \n`);
