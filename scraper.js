@@ -21,8 +21,8 @@ function folderCheck(dir) {
 }
 
 //Function to scrape main page and return individual shirt links
-var preScrape = new Promise(function(resolve, reject){
-    var url = 'http://shirts4mike.com/shirts.php';
+let preScrape = new Promise(function(resolve, reject){
+    let url = 'http://shirts4mike.com/shirts.php';
     request(url, (error, response, html) => {
      if(!error && response.statusCode == 200){
        $ = cheerio.load(html);
@@ -39,10 +39,10 @@ var preScrape = new Promise(function(resolve, reject){
 
 //Function to scrape info from each individual page
 function scraper() {
-const writeStream = fs.createWriteStream('./data/' + Date().substring(4,15).replace(/ /gi, '-') + '.csv');
+const writeStream = fs.createWriteStream('./data/' + currentDate() + '.csv');
 writeStream.write(`Title,Price,ImageURL,Url,Time \n`);
  for (shirt in shirts){
-    var url = 'http://shirts4mike.com/' + shirts[shirt];
+    let url = 'http://shirts4mike.com/' + shirts[shirt];
     request(url, (function(shirt){
           return function(error, response, html) {
            if(!error && response.statusCode == 200){
@@ -60,6 +60,18 @@ writeStream.write(`Title,Price,ImageURL,Url,Time \n`);
     } )(shirt));
   }
   console.log('Scraping complete...')
+}
+
+//Calls for date and returns back in YYYY-MM-DD format
+function currentDate() {
+  let date = new Date();
+  let year = date.getFullYear().toString();
+  let month = (date.getMonth() + 1).toString();
+  let day = date.getDate().toString();
+  (day.length == 1) && (day = '0' + day);
+  (month.length == 1) && (month = '0' + month);
+  let yyyymmdd = `${year}-${month}-${day}`;
+  return yyyymmdd;
 }
 
 //Log error message based on error type to console and log file
